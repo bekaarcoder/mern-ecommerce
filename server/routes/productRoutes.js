@@ -8,6 +8,7 @@ router.get(
   "/",
   asyncHandler(async (req, res) => {
     const products = await Product.find({});
+    // throw new Error("Testing Error");
     res.json(products);
   })
 );

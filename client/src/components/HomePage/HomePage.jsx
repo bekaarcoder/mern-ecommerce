@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { Row, Col } from "react-bootstrap";
 import ProductCard from "../ProductCard";
 import { listProducts } from "../../actions/productActions";
+import Loader from "../Loader";
+import Message from "../Message";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -19,9 +20,9 @@ const HomePage = () => {
     <div>
       <h1>Latest Products</h1>
       {loading ? (
-        <p>Loading Products...</p>
+        <Loader />
       ) : error ? (
-        <p>{error}</p>
+        <Message variant="danger">{error}</Message>
       ) : (
         <Row>
           {products &&
