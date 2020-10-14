@@ -1,4 +1,4 @@
-import { CART_ADD_ITEM } from "../constants/types";
+import { CART_ADD_ITEM, CART_UPDATE_ITEM } from "../constants/types";
 
 export const cartReducer = (state = { cartItems: [] }, action) => {
   switch (action.type) {
@@ -21,6 +21,17 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
       return {
         ...state,
         cartItems: [...state.cartItems, newItem],
+      };
+    case CART_UPDATE_ITEM:
+      const cartItem = action.payload;
+      const newCartItems = state.cartItems.map((item) =>
+        item.product_id === cartItem.product_id
+          ? { ...cartItem, quantity: cartItem.quantity }
+          : item
+      );
+      return {
+        ...state,
+        cartItems: newCartItems,
       };
     default:
       return state;

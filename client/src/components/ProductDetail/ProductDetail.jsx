@@ -9,7 +9,7 @@ import Message from "../Message";
 
 const ProductDetail = ({ history, match }) => {
   const id = match.params.id;
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   const dispatch = useDispatch();
 
