@@ -1,4 +1,8 @@
-import { CART_ADD_ITEM, CART_UPDATE_ITEM } from "../constants/types";
+import {
+  CART_ADD_ITEM,
+  CART_REMOVE_ITEM,
+  CART_UPDATE_ITEM,
+} from "../constants/types";
 
 export const cartReducer = (state = { cartItems: [] }, action) => {
   switch (action.type) {
@@ -32,6 +36,13 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
       return {
         ...state,
         cartItems: newCartItems,
+      };
+    case CART_REMOVE_ITEM:
+      return {
+        ...state,
+        cartItems: state.cartItems.filter(
+          (item) => item.product_id !== action.payload
+        ),
       };
     default:
       return state;
