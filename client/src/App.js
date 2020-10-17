@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import HomePage from "./components/HomePage/HomePage";
 import ProductDetail from "./components/ProductDetail/ProductDetail";
 import CartPage from "./components/CartPage/CartPage";
+import LoginPage from "./components/LoginPage/LoginPage";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
           <Route path="/" component={HomePage} exact />
           <Route path="/product/:id" component={ProductDetail} exact />
           <Route path="/cart/:id?" component={CartPage} />
+          <Route path="/signin" component={LoginPage} />
         </Container>
       </main>
     </Router>
