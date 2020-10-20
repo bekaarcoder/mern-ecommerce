@@ -93,7 +93,7 @@ const RegisterPage = ({ location, history }) => {
       <Row className="my-3">
         <Col>
           Have an account?{" "}
-          <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}>
+          <Link to={redirect ? `/login?redirect=${redirect}` : "/signin"}>
             Login
           </Link>
         </Col>

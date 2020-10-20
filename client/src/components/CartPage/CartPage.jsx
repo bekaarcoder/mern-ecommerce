@@ -2,7 +2,11 @@ import React, { useEffect } from "react";
 import { Button, Col, Image, ListGroup, Row, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { addItemToCart, removeCartItem, updateCartItem } from "../../actions/cartActions";
+import {
+  addItemToCart,
+  removeCartItem,
+  updateCartItem,
+} from "../../actions/cartActions";
 import Message from "../Message";
 
 const CartPage = ({ match, location, history }) => {
@@ -21,12 +25,12 @@ const CartPage = ({ match, location, history }) => {
   }, [dispatch, product_id, qty]);
 
   const removeItemFromCart = (id) => {
-    dispatch(removeCartItem(id))
+    dispatch(removeCartItem(id));
   };
 
   const checkoutHandler = () => {
-    history.push('/login?redirect=shipping')
-  }
+    history.push("/signin?redirect=shipping");
+  };
 
   return (
     <>
@@ -111,14 +115,21 @@ const CartPage = ({ match, location, history }) => {
                 <ListGroup.Item>
                   <h5>
                     ₹
-                    {cartItems.reduce(
-                      (acc, item) => acc + item.price * item.quantity,
-                      0
-                    ).toFixed(2)}
+                    {cartItems
+                      .reduce(
+                        (acc, item) => acc + item.price * item.quantity,
+                        0
+                      )
+                      .toFixed(2)}
                   </h5>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <Button type="button" className="btn-block" variant="success" onClick={checkoutHandler}>
+                  <Button
+                    type="button"
+                    className="btn-block"
+                    variant="success"
+                    onClick={checkoutHandler}
+                  >
                     Proceed To Checkout
                   </Button>
                   <Link to="/" className="btn btn-block btn-warning">
