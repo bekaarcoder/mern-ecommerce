@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Button, Col, Image, ListGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { createOrder } from "../../actions/orderActions";
 import CheckoutSteps from "../CheckoutSteps";
+import Message from "../Message";
 
-const PlaceOrderPage = () => {
+const PlaceOrderPage = ({ history }) => {
+  const dispatch = useDispatch();
+
   const cart = useSelector((state) => state.cart);
   const { shippingAddress, cartItems } = cart;
 
@@ -20,9 +24,40 @@ const PlaceOrderPage = () => {
 
   const totalPrice = Number(itemsPrice) + Number(shippingPrice) + Number(tax);
 
+  const orderCreate = useSelector((state) => state.orderCreate);
+  const { order, success, error } = orderCreate;
+
+  useEffect(() => {
+    if (success) {
+      history.push(`/order/${order._id}`);
+    }
+    // eslint-disable-next-line
+  }, [history, success]);
+
+  const placeOrderHandler = () => {
+    dispatch(
+      createOrder({
+        orderItems: cartItems,
+        shippingAddress: shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        taxPrice: tax,
+        shippingPrice: shippingPrice,
+        totalPrice: totalPrice,
+        itemsPrice: itemsPrice,
+      })
+    );
+  };
+
   return (
     <div className="my-3">
       <CheckoutSteps step1 step2 step3 />
+      {error && (
+        <Row>
+          <Col>
+            <Message variant="danger">{error}</Message>
+          </Col>
+        </Row>
+      )}
       <Row>
         <Col md={8}>
           <ListGroup variant="flush">
@@ -95,7 +130,12 @@ const PlaceOrderPage = () => {
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
-              <Button type="button" variant="success" className="btn-block">
+              <Button
+                type="button"
+                variant="success"
+                className="btn-block"
+                onClick={placeOrderHandler}
+              >
                 Place Order
               </Button>
             </ListGroup.Item>

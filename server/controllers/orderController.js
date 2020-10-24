@@ -3,7 +3,7 @@ import Order from "../models/orderModel.js";
 
 // @desc    add order items
 // @access  Private
-// @route   POST /api/order
+// @route   POST /api/orders
 const addOrderItems = asyncHandler(async (req, res) => {
   const {
     orderItems,
