@@ -11,6 +11,7 @@ import ProfilePage from "./components/ProfilePage/ProfilePage";
 import ShippingPage from "./components/ShippingPage/ShippingPage";
 import PaymentPage from "./components/PaymentPage/PaymentPage";
 import PlaceOrderPage from "./components/PlaceOrderPage/PlaceOrderPage";
+import OrderPage from "./components/OrderPage/OrderPage";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/shipping" component={ShippingPage} />
           <Route path="/payment" component={PaymentPage} />
           <Route path="/placeorder" component={PlaceOrderPage} />
+          <Route path="/order/:id" component={OrderPage} />
         </Container>
       </main>
     </Router>
