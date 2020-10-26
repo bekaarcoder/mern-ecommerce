@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Col, Row, Form, Button } from "react-bootstrap";
+import { Col, Row, Form, Button, Table } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { getOrdersForUser } from "../../actions/orderActions";
 import { getUserDetail, updateUserProfile } from "../../actions/userActions";
 import Loader from "../Loader";
 import Message from "../Message";
@@ -22,12 +24,16 @@ const ProfilePage = ({ location, history }) => {
   const userLogin = useSelector((state) => state.user);
   const { userInfo } = userLogin;
 
+  const orderList = useSelector((state) => state.orderList);
+  const { orders, loading: ordersLoading, error: ordersError } = orderList;
+
   useEffect(() => {
     if (!userInfo) {
       history.push("/signin");
     } else {
       if (!user.name) {
         dispatch(getUserDetail("profile"));
+        dispatch(getOrdersForUser());
       } else {
         setName(user.name);
         setEmail(user.email);
@@ -104,6 +110,52 @@ const ProfilePage = ({ location, history }) => {
       </Col>
       <Col md={8}>
         <h3 className="my-3">MY ORDERS</h3>
+        {ordersLoading ? (
+          <Loader />
+        ) : ordersError ? (
+          <Message variant="danger">{ordersError}</Message>
+        ) : (
+          <Table striped hover>
+            <thead>
+              <th>ORDER ID</th>
+              <th>DATE</th>
+              <th>TOTAL</th>
+              <th>PAID</th>
+              <th>DELIVERED</th>
+              <th></th>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <tr>
+                  <td>{order._id.toUpperCase()}</td>
+                  <td>{order.createdAt.substring(0, 10)}</td>
+                  <td>₹{order.totalPrice}</td>
+                  <td>
+                    {order.isPaid ? (
+                      order.paidAt.substring(0, 10)
+                    ) : (
+                      <i className="fas fa-times text-danger"></i>
+                    )}
+                  </td>
+                  <td>
+                    {!order.isDeliverd ? (
+                      <i className="fas fa-times text-danger"></i>
+                    ) : (
+                      order.deliveredAt.substring(0, 10)
+                    )}
+                  </td>
+                  <td>
+                    <LinkContainer to={`/order/${order._id}`}>
+                      <Button variant="primary" className="btn-sm">
+                        View Order
+                      </Button>
+                    </LinkContainer>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
       </Col>
     </Row>
   );

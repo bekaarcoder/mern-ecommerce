@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
-import { Button, Col, Image, ListGroup, Row } from "react-bootstrap";
+import { Col, Image, ListGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -11,6 +11,7 @@ import {
 } from "../../actions/orderActions";
 import Message from "../Message";
 import Loader from "../Loader";
+import { resetCartItems } from "../../actions/cartActions";
 
 const OrderPage = ({ match }) => {
   const [skdReady, setSdkReady] = useState(false);
@@ -38,6 +39,7 @@ const OrderPage = ({ match }) => {
 
     if (!order || successPay) {
       dispatch(resetOrderState());
+      dispatch(resetCartItems());
       dispatch(getOrder(orderId));
     } else if (!order.isPaid) {
       console.log("order not paid");

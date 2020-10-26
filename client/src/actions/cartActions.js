@@ -3,6 +3,7 @@ import {
   CART_ADD_ITEM,
   CART_ADD_SHIPPING_ADDRESS,
   CART_REMOVE_ITEM,
+  CART_RESET_ITEM,
   CART_SAVE_PAYMENT_METHOD,
   CART_UPDATE_ITEM,
 } from "../constants/types";
@@ -68,4 +69,14 @@ export const savePaymentMethod = (data) => (dispatch) => {
   });
 
   localStorage.setItem("paymentMethod", JSON.stringify(data));
+};
+
+export const resetCartItems = () => (dispatch) => {
+  console.log("removing cart items");
+  localStorage.removeItem("cartItems");
+  localStorage.removeItem("shippingAddress");
+  localStorage.removeItem("paymentMethod");
+  dispatch({
+    type: CART_RESET_ITEM,
+  });
 };

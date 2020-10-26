@@ -1,7 +1,9 @@
 import axios from "axios";
 import {
+  ORDER_LIST_RESET,
   USER_DETAIL_FAIL,
   USER_DETAIL_REQUEST,
+  USER_DETAIL_RESET,
   USER_DETAIL_SUCCESS,
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
@@ -14,6 +16,7 @@ import {
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
 } from "../constants/types";
+import { resetCartItems } from "./cartActions";
 
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -55,6 +58,10 @@ export const logout = () => (dispatch) => {
   dispatch({
     type: USER_LOGOUT,
   });
+  dispatch({ type: ORDER_LIST_RESET });
+  dispatch({ type: USER_DETAIL_RESET });
+  dispatch(resetCartItems());
+  // dispatch({ type: CART_RESET_ITEM });
 };
 
 export const register = (name, email, password) => async (dispatch) => {
