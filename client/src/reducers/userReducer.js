@@ -17,6 +17,9 @@ import {
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
   USER_LIST_RESET,
+  USER_REMOVE_REQUEST,
+  USER_REMOVE_SUCCESS,
+  USER_REMOVE_FAIL,
 } from "../constants/types";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -127,6 +130,21 @@ export const userListReducer = (state = { users: [] }, action) => {
     case USER_LIST_RESET:
       return {
         users: [],
+      };
+    case USER_REMOVE_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case USER_REMOVE_SUCCESS:
+      return {
+        loading: false,
+        users: state.users.filter((user) => user._id !== action.payload),
+      };
+    case USER_REMOVE_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
       };
     default:
       return state;

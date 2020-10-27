@@ -16,6 +16,9 @@ import {
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
+  USER_REMOVE_FAIL,
+  USER_REMOVE_REQUEST,
+  USER_REMOVE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
@@ -199,6 +202,35 @@ export const getUserLists = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const removeUser = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_REMOVE_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${getState().user.userInfo.token}`,
+      },
+    };
+
+    await axios.delete(`/api/users/${id}`, config);
+
+    dispatch({
+      type: USER_REMOVE_SUCCESS,
+      payload: id,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_REMOVE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Row, Col, Table, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { getUserLists } from "../../actions/userActions";
+import { getUserLists, removeUser } from "../../actions/userActions";
 import Loader from "../Loader";
 import Message from "../Message";
 
@@ -22,6 +22,12 @@ const UserListPage = ({ history }) => {
       history.push("/signin");
     }
   }, [dispatch, history, userInfo]);
+
+  const deleteUserHandler = (id) => {
+    if (window.confirm(`Are you sure you want to delete user ${id} ?`)) {
+      dispatch(removeUser(id));
+    }
+  };
 
   return (
     <>
@@ -57,12 +63,16 @@ const UserListPage = ({ history }) => {
                       )}
                     </td>
                     <td>
-                      <LinkContainer to={`/user/${user._id}/edit`}>
+                      <LinkContainer to={`/admin/user/${user._id}/edit`}>
                         <Button variant="warning" className="btn-sm">
                           <i className="fas fa-edit"></i>
                         </Button>
                       </LinkContainer>
-                      <Button variant="danger" className="btn-sm ml-2">
+                      <Button
+                        variant="danger"
+                        className="btn-sm ml-2"
+                        onClick={() => deleteUserHandler(user._id)}
+                      >
                         <i className="fas fa-trash"></i>
                       </Button>
                     </td>
