@@ -5,7 +5,11 @@ import FormContainer from "../FormContainer";
 import { Button, Form } from "react-bootstrap";
 import Loader from "../Loader";
 import Message from "../Message";
-import { getUserDetail } from "../../actions/userActions";
+import {
+  getUserDetail,
+  updateUser,
+  updateUserReset,
+} from "../../actions/userActions";
 
 const UserEditPage = ({ history, match }) => {
   const userId = match.params.id;
@@ -18,18 +22,34 @@ const UserEditPage = ({ history, match }) => {
   const userDetail = useSelector((state) => state.userDetail);
   const { user, loading, error } = userDetail;
 
+  const userUpdate = useSelector((state) => state.userUpdate);
+  const { loading: loadingUpdate, error: errorUpdate, success } = userUpdate;
+
   useEffect(() => {
-    if (!user.name || userId !== user._id) {
-      dispatch(getUserDetail(userId));
+    if (success) {
+      dispatch(updateUserReset());
+      history.push("/admin/users");
     } else {
-      setName(user.name);
-      setEmail(user.email);
-      setIsAdmin(user.isAdmin);
+      if (!user.name || userId !== user._id) {
+        dispatch(getUserDetail(userId));
+      } else {
+        setName(user.name);
+        setEmail(user.email);
+        setIsAdmin(user.isAdmin);
+      }
     }
-  }, [dispatch, userId, user]);
+  }, [dispatch, userId, user, success, history]);
 
   const formSubmitHandler = (e) => {
     e.preventDefault();
+    dispatch(
+      updateUser({
+        _id: userId,
+        name: name,
+        email: email,
+        isAdmin: isAdmin,
+      })
+    );
   };
 
   return (
@@ -44,6 +64,8 @@ const UserEditPage = ({ history, match }) => {
       ) : (
         <FormContainer>
           <h3 className="my-3">EDIT USER</h3>
+          {loadingUpdate && <Loader />}
+          {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
           <Form onSubmit={formSubmitHandler}>
             <Form.Group>
               <Form.Label>Name</Form.Label>
