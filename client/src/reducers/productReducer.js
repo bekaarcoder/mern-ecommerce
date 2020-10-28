@@ -5,6 +5,9 @@ import {
   PRODUCT_DETAIL_REQUEST,
   PRODUCT_DETAIL_SUCCESS,
   PRODUCT_DETAIL_FAIL,
+  PRODUCT_REMOVE_REQUEST,
+  PRODUCT_REMOVE_SUCCESS,
+  PRODUCT_REMOVE_FAIL,
 } from "../constants/types";
 
 export const productListReducer = (
@@ -25,6 +28,23 @@ export const productListReducer = (
         products: action.payload,
       };
     case PRODUCT_LIST_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case PRODUCT_REMOVE_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case PRODUCT_REMOVE_SUCCESS:
+      return {
+        loading: false,
+        products: state.products.filter(
+          (product) => product._id !== action.payload
+        ),
+      };
+    case PRODUCT_REMOVE_FAIL:
       return {
         loading: false,
         error: action.payload,
