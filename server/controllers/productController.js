@@ -24,6 +24,69 @@ const getProductById = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    create a product
+// @access  Private/Admin
+// @route   POST /api/products/
+const createProduct = asyncHandler(async (req, res) => {
+  const { name, description, price, brand, category, countInStock } = req.body;
+  const image = req.body.image || "/images/sample.jpg";
+
+  const newProduct = await Product.create({
+    name,
+    description,
+    price,
+    image,
+    brand,
+    category,
+    countInStock,
+    user: req.user._id,
+  });
+
+  if (newProduct) {
+    res.status(201);
+    res.json({
+      _id: newProduct._id,
+      name: newProduct.name,
+      description: newProduct.description,
+      price: newProduct.price,
+      image: newProduct.image,
+      brand: newProduct.brand,
+      category: newProduct.category,
+      countInStock: newProduct.countInStock,
+      user: newProduct.user,
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invalid product data");
+  }
+});
+
+// @desc    update a product
+// @access  Private/Admin
+// @route   PUT /api/products/:id
+const updateProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+
+  const { name, description, price, brand, category, countInStock } = req.body;
+  const image = req.body.image || "/images/sample.jpg";
+
+  if (product) {
+    product.name = name;
+    product.description = description;
+    product.price = price;
+    product.brand = brand;
+    product.category = category;
+    product.countInStock = countInStock;
+    product.image = image;
+
+    const updatedProduct = await product.save();
+    res.json(updatedProduct);
+  } else {
+    res.status(404);
+    throw new Error("Product not found.");
+  }
+});
+
 // @desc    delete a product
 // @access  Private/Admin
 // @route   DELETE /api/products/:id
@@ -39,4 +102,10 @@ const deleteProduct = asyncHandler(async (req, res) => {
   }
 });
 
-export { getProducts, getProductById, deleteProduct };
+export {
+  getProducts,
+  getProductById,
+  deleteProduct,
+  createProduct,
+  updateProduct,
+};
