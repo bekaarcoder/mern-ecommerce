@@ -38,9 +38,11 @@ const ProductsListPage = ({ history }) => {
           <h3>PRODUCT LIST</h3>
         </Col>
         <Col className="text-right">
-          <Button variant="primary">
-            <i className="fas fa-plus"></i> Create Product
-          </Button>
+          <LinkContainer to="/admin/products/create">
+            <Button variant="primary">
+              <i className="fas fa-plus"></i> Create Product
+            </Button>
+          </LinkContainer>
         </Col>
       </Row>
       <Row>

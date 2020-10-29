@@ -8,6 +8,9 @@ import {
   PRODUCT_REMOVE_REQUEST,
   PRODUCT_REMOVE_SUCCESS,
   PRODUCT_REMOVE_FAIL,
+  PRODUCT_CREATE_REQUEST,
+  PRODUCT_CREATE_SUCCESS,
+  PRODUCT_CREATE_FAIL,
 } from "../constants/types";
 
 export const productListReducer = (
@@ -67,6 +70,28 @@ export const productDetailsReducer = (state = { product: {} }, action) => {
         product: action.payload,
       };
     case PRODUCT_DETAIL_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+export const createProductReducer = (state = { product: {} }, action) => {
+  switch (action.type) {
+    case PRODUCT_CREATE_REQUEST:
+      return {
+        loading: true,
+      };
+    case PRODUCT_CREATE_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        product: action.payload,
+      };
+    case PRODUCT_CREATE_FAIL:
       return {
         loading: false,
         error: action.payload,

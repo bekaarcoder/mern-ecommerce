@@ -15,6 +15,7 @@ import OrderPage from "./components/OrderPage/OrderPage";
 import UserListPage from "./components/UserListPage/UserListPage";
 import UserEditPage from "./components/UserEditPage/UserEditPage";
 import ProductsListPage from "./components/ProductsListPage/ProductsListPage";
+import ProductCreatePage from "./components/ProductCreatePage/ProductCreatePage";
 
 const App = () => {
   return (
@@ -34,7 +35,12 @@ const App = () => {
           <Route path="/order/:id" component={OrderPage} />
           <Route path="/admin/users" component={UserListPage} />
           <Route path="/admin/user/:id/edit" component={UserEditPage} />
-          <Route path="/admin/products" component={ProductsListPage} />
+          <Route
+            path="/admin/products/create"
+            component={ProductCreatePage}
+            exact
+          />
+          <Route path="/admin/products" component={ProductsListPage} exact />
         </Container>
       </main>
     </Router>
