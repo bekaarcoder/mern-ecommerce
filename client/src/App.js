@@ -16,6 +16,7 @@ import UserListPage from "./components/UserListPage/UserListPage";
 import UserEditPage from "./components/UserEditPage/UserEditPage";
 import ProductsListPage from "./components/ProductsListPage/ProductsListPage";
 import ProductCreatePage from "./components/ProductCreatePage/ProductCreatePage";
+import ProductEditPage from "./components/ProductEditPage/ProductEditPage";
 
 const App = () => {
   return (
@@ -23,7 +24,6 @@ const App = () => {
       <Header />
       <main>
         <Container>
-          <Route path="/" component={HomePage} exact />
           <Route path="/product/:id" component={ProductDetail} exact />
           <Route path="/cart/:id?" component={CartPage} />
           <Route path="/signin" component={LoginPage} />
@@ -41,6 +41,8 @@ const App = () => {
             exact
           />
           <Route path="/admin/products" component={ProductsListPage} exact />
+          <Route path="/admin/products/:id/edit" component={ProductEditPage} />
+          <Route path="/" component={HomePage} exact />
         </Container>
       </main>
     </Router>

@@ -6,6 +6,7 @@ import { Button, Form } from "react-bootstrap";
 import Loader from "../Loader";
 import Message from "../Message";
 import { addProduct } from "../../actions/productActions";
+import { PRODUCT_CREATE_RESET } from "../../constants/types";
 
 const ProductCreatePage = ({ history }) => {
   const [name, setName] = useState("");
@@ -15,6 +16,8 @@ const ProductCreatePage = ({ history }) => {
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
   const [countInStock, setCountInStock] = useState(0);
+
+  const dispatch = useDispatch();
 
   const createProduct = useSelector((state) => state.createProduct);
   const { error, loading, success } = createProduct;
@@ -26,11 +29,12 @@ const ProductCreatePage = ({ history }) => {
     if (userInfo && userInfo.isAdmin) {
       if (success) {
         history.push("/admin/products");
+        dispatch({ type: PRODUCT_CREATE_RESET });
       }
     } else {
       history.push("/signin");
     }
-  });
+  }, [dispatch, userInfo, history, success]);
 
   const formSubmitHandler = (e) => {
     e.preventDefault();
@@ -47,7 +51,6 @@ const ProductCreatePage = ({ history }) => {
     );
   };
 
-  const dispatch = useDispatch();
   return (
     <>
       <Link to="/admin/products" className="btn btn-sm btn-dark my-3">

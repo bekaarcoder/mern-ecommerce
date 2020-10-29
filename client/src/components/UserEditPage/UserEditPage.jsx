@@ -20,25 +20,32 @@ const UserEditPage = ({ history, match }) => {
   const dispatch = useDispatch();
 
   const userDetail = useSelector((state) => state.userDetail);
-  const { user, loading, error } = userDetail;
+  const { user: userInfo, loading, error } = userDetail;
+
+  const user = useSelector((state) => state.user);
+  const { userInfo: loggedUser } = user;
 
   const userUpdate = useSelector((state) => state.userUpdate);
   const { loading: loadingUpdate, error: errorUpdate, success } = userUpdate;
 
   useEffect(() => {
-    if (success) {
-      dispatch(updateUserReset());
-      history.push("/admin/users");
-    } else {
-      if (!user.name || userId !== user._id) {
-        dispatch(getUserDetail(userId));
+    if (loggedUser && loggedUser.isAdmin) {
+      if (success) {
+        dispatch(updateUserReset());
+        history.push("/admin/users");
       } else {
-        setName(user.name);
-        setEmail(user.email);
-        setIsAdmin(user.isAdmin);
+        if (!userInfo || userId !== userInfo._id) {
+          dispatch(getUserDetail(userId));
+        } else {
+          setName(userInfo.name);
+          setEmail(userInfo.email);
+          setIsAdmin(userInfo.isAdmin);
+        }
       }
+    } else {
+      history.push("/signin");
     }
-  }, [dispatch, userId, user, success, history]);
+  }, [dispatch, userId, loggedUser, success, history, userInfo]);
 
   const formSubmitHandler = (e) => {
     e.preventDefault();
