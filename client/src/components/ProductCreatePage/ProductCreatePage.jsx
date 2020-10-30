@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +17,7 @@ const ProductCreatePage = ({ history }) => {
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
   const [countInStock, setCountInStock] = useState(0);
+  const [uploading, setUploading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -49,6 +51,29 @@ const ProductCreatePage = ({ history }) => {
         countInStock,
       })
     );
+  };
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    setUploading(true);
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const { data } = await axios.post("/api/upload", formData, config);
+      console.log(data);
+      setImage(data);
+      setUploading(false);
+    } catch (error) {
+      console.log(error);
+      setUploading(false);
+    }
   };
 
   return (
@@ -105,6 +130,13 @@ const ProductCreatePage = ({ history }) => {
               value={image}
               onChange={(e) => setImage(e.target.value)}
             />
+            <Form.File
+              id="image-file"
+              label="Choose File"
+              custom
+              onChange={uploadFileHandler}
+            />
+            {uploading && <Loader />}
           </Form.Group>
           <Form.Group>
             <Form.Label>Description</Form.Label>
