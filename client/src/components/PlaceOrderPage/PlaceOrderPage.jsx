@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { createOrder } from "../../actions/orderActions";
 import CheckoutSteps from "../CheckoutSteps";
 import Message from "../Message";
+import { resetCartItems } from "../../actions/cartActions";
 
 const PlaceOrderPage = ({ history }) => {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ const PlaceOrderPage = ({ history }) => {
   useEffect(() => {
     if (success) {
       history.push(`/order/${order._id}`);
+      dispatch(resetCartItems());
     }
     // eslint-disable-next-line
   }, [history, success]);

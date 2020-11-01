@@ -1,8 +1,15 @@
 import axios from "axios";
 import {
+  ADMIN_ORDER_LIST_FAIL,
+  ADMIN_ORDER_LIST_REQUEST,
+  ADMIN_ORDER_LIST_SUCCESS,
   ORDER_CREATE_FAIL,
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
+  ORDER_DELIVER_FAIL,
+  ORDER_DELIVER_REQUEST,
+  ORDER_DELIVER_RESET,
+  ORDER_DELIVER_SUCCESS,
   ORDER_DETAIL_FAIL,
   ORDER_DETAIL_REQUEST,
   ORDER_DETAIL_SUCCESS,
@@ -109,10 +116,35 @@ export const payOrder = (id, paymentResult) => async (dispatch, getState) => {
   }
 };
 
+export const deliverOrder = (order) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ORDER_DELIVER_REQUEST });
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${getState().user.userInfo.token}`,
+      },
+    };
+
+    await axios.put(`/api/orders/${order._id}/deliver`, order, config);
+
+    dispatch({ type: ORDER_DELIVER_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: ORDER_DELIVER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
 export const resetOrderState = () => (dispatch) => {
   dispatch({
     type: ORDER_PAY_RESET,
   });
+  dispatch({ type: ORDER_DELIVER_RESET });
 };
 
 export const getOrdersForUser = () => async (dispatch, getState) => {
@@ -137,6 +169,33 @@ export const getOrdersForUser = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: ORDER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getOrdersForAdmin = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ADMIN_ORDER_LIST_REQUEST });
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${getState().user.userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get("/api/orders", config);
+
+    dispatch({
+      type: ADMIN_ORDER_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_ORDER_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

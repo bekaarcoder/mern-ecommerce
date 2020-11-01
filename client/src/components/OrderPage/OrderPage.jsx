@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
-import { Col, Image, ListGroup, Row } from "react-bootstrap";
+import { Col, Image, ListGroup, Row, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
+  deliverOrder,
   getOrder,
   payOrder,
   resetOrderState,
 } from "../../actions/orderActions";
 import Message from "../Message";
 import Loader from "../Loader";
-import { resetCartItems } from "../../actions/cartActions";
 
-const OrderPage = ({ match }) => {
+const OrderPage = ({ match, history }) => {
   const [skdReady, setSdkReady] = useState(false);
   const dispatch = useDispatch();
   const orderId = match.params.id;
@@ -24,37 +24,56 @@ const OrderPage = ({ match }) => {
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay;
 
-  useEffect(() => {
-    const addPaypalScript = async () => {
-      const { data: clientId } = await axios.get("/api/config/paypal");
-      const script = document.createElement("script");
-      script.type = "text/javascript";
-      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
-      script.async = true;
-      script.onload = () => {
-        setSdkReady(true);
-      };
-      document.body.appendChild(script);
-    };
+  const user = useSelector((state) => state.user);
+  const { userInfo } = user;
 
-    if (!order || successPay) {
-      dispatch(resetOrderState());
-      dispatch(resetCartItems());
-      dispatch(getOrder(orderId));
-    } else if (!order.isPaid) {
-      console.log("order not paid");
-      if (!window.paypal) {
-        addPaypalScript();
-        console.log("adding script");
-      } else {
-        setSdkReady(true);
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const {
+    loading: loadingDeliver,
+    success: successDeliver,
+    error: errorDeliver,
+  } = orderDeliver;
+
+  useEffect(() => {
+    if (userInfo) {
+      const addPaypalScript = async () => {
+        const { data: clientId } = await axios.get("/api/config/paypal");
+        const script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+        script.async = true;
+        script.onload = () => {
+          setSdkReady(true);
+        };
+        document.body.appendChild(script);
+      };
+
+      if (!order || orderId !== order._id || successPay || successDeliver) {
+        dispatch(resetOrderState());
+        dispatch(getOrder(orderId));
+      } else if (!order.isPaid) {
+        console.log("order not paid");
+        if (!window.paypal) {
+          addPaypalScript();
+          console.log("adding script");
+        } else {
+          setSdkReady(true);
+        }
       }
+    } else {
+      history.push("/signin");
     }
-  }, [dispatch, orderId, successPay, order]);
+  }, [dispatch, orderId, successPay, order, history, userInfo, successDeliver]);
 
   const successPaymentHandler = (paymentResult) => {
     console.log(paymentResult);
     dispatch(payOrder(orderId, paymentResult));
+  };
+
+  const deliverHandler = () => {
+    if (window.confirm("Are you sure to mark this order as delivered?")) {
+      dispatch(deliverOrder(order));
+    }
   };
 
   return (
@@ -165,6 +184,26 @@ const OrderPage = ({ match }) => {
                   <Col>₹{order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListGroup.Item>
+                    {loadingDeliver ? (
+                      <Loader />
+                    ) : errorDeliver ? (
+                      <Message variant="danger">{errorDeliver}</Message>
+                    ) : (
+                      <Button
+                        variant="primary"
+                        onClick={deliverHandler}
+                        className="btn-block"
+                      >
+                        Mark As Delivered
+                      </Button>
+                    )}
+                  </ListGroup.Item>
+                )}
               {!order.isPaid && (
                 <ListGroup.Item>
                   {loadingPay && <Loader />}

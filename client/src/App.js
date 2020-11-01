@@ -17,6 +17,7 @@ import UserEditPage from "./components/UserEditPage/UserEditPage";
 import ProductsListPage from "./components/ProductsListPage/ProductsListPage";
 import ProductCreatePage from "./components/ProductCreatePage/ProductCreatePage";
 import ProductEditPage from "./components/ProductEditPage/ProductEditPage";
+import OrderListPage from "./components/OrderListPage/OrderListPage";
 
 const App = () => {
   return (
@@ -33,6 +34,7 @@ const App = () => {
           <Route path="/payment" component={PaymentPage} />
           <Route path="/placeorder" component={PlaceOrderPage} />
           <Route path="/order/:id" component={OrderPage} />
+          <Route path="/admin/orders" component={OrderListPage} />
           <Route path="/admin/users" component={UserListPage} />
           <Route path="/admin/user/:id/edit" component={UserEditPage} />
           <Route
