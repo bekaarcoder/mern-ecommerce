@@ -163,7 +163,7 @@ export const createProductReview = (id, review) => async (
 
     const config = {
       headers: {
-        "Content-Type": "appliation/json",
+        "Content-Type": "application/json",
         Authorization: `Bearer ${getState().user.userInfo.token}`,
       },
     };
