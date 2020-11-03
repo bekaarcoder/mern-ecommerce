@@ -44,6 +44,7 @@ const App = () => {
           />
           <Route path="/admin/products" component={ProductsListPage} exact />
           <Route path="/admin/products/:id/edit" component={ProductEditPage} />
+          <Route path="/search/:keyword" component={HomePage} />
           <Route path="/" component={HomePage} exact />
         </Container>
       </main>

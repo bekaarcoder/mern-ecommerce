@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { logout } from "../actions/userActions";
+import SearchBox from "./SearchBox";
+import { Route } from "react-router-dom";
 
 const Header = ({ history }) => {
   const dispatch = useDispatch();
@@ -18,9 +20,10 @@ const Header = ({ history }) => {
       <Navbar bg="dark" variant="dark">
         <Container fluid>
           <LinkContainer to="/">
-            <Navbar.Brand>MERNSHOP</Navbar.Brand>
+            <Navbar.Brand className="mr-5">MERNSHOP</Navbar.Brand>
           </LinkContainer>
-          <Nav className="ml-auto">
+          <Route render={({ history }) => <SearchBox history={history} />} />
+          <Nav className="ml-5">
             <LinkContainer to="/cart">
               <Nav.Link>
                 <i className="fas fa-shopping-cart"></i> CART
