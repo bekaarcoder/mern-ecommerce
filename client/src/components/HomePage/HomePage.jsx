@@ -5,17 +5,19 @@ import ProductCard from "../ProductCard";
 import { listProducts } from "../../actions/productActions";
 import Loader from "../Loader";
 import Message from "../Message";
+import Paginate from "../Paginate";
 
 const HomePage = ({ match }) => {
   const keyword = match.params.keyword;
+  const pageNumber = match.params.pageNumber;
   const dispatch = useDispatch();
 
   const productList = useSelector((state) => state.productList);
-  const { loading, error, products } = productList;
+  const { loading, error, products, page, pages } = productList;
 
   useEffect(() => {
-    dispatch(listProducts(keyword));
-  }, [dispatch, keyword]);
+    dispatch(listProducts(keyword, pageNumber));
+  }, [dispatch, keyword, pageNumber]);
 
   return (
     <div>
@@ -25,14 +27,21 @@ const HomePage = ({ match }) => {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Row>
-          {products &&
-            products.map((product) => (
-              <Col sm={12} md={6} lg={4} xl={3} key={product._id}>
-                <ProductCard product={product} />
-              </Col>
-            ))}
-        </Row>
+        <>
+          <Row>
+            {products &&
+              products.map((product) => (
+                <Col sm={12} md={6} lg={4} xl={3} key={product._id}>
+                  <ProductCard product={product} />
+                </Col>
+              ))}
+          </Row>
+          <Paginate
+            pages={pages}
+            page={page}
+            keyword={keyword ? keyword : ""}
+          />
+        </>
       )}
     </div>
   );

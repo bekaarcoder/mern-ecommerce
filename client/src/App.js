@@ -43,8 +43,18 @@ const App = () => {
             exact
           />
           <Route path="/admin/products" component={ProductsListPage} exact />
+          <Route
+            path="/admin/products/page/:pageNumber"
+            component={ProductsListPage}
+            exact
+          />
           <Route path="/admin/products/:id/edit" component={ProductEditPage} />
-          <Route path="/search/:keyword" component={HomePage} />
+          <Route path="/search/:keyword" component={HomePage} exact />
+          <Route
+            path="/search/:keyword/page/:pageNumber"
+            component={HomePage}
+          />
+          <Route path="/page/:pageNumber" component={HomePage} />
           <Route path="/" component={HomePage} exact />
         </Container>
       </main>
