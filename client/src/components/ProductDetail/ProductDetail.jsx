@@ -10,6 +10,7 @@ import {
 import Loader from "../Loader";
 import Message from "../Message";
 import { PRODUCT_CREATE_REVIEW_RESET } from "../../constants/types";
+import Meta from "../Meta";
 
 const ProductDetail = ({ history, match }) => {
   const id = match.params.id;
@@ -66,6 +67,7 @@ const ProductDetail = ({ history, match }) => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
+          <Meta title={product.name} />
           <Row>
             <Col md={6}>
               <Image src={product.image} alt={product.name} fluid />

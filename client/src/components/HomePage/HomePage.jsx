@@ -7,6 +7,7 @@ import Loader from "../Loader";
 import Message from "../Message";
 import Paginate from "../Paginate";
 import ProductCarousel from "../ProductCarousel";
+import Meta from "../Meta";
 
 const HomePage = ({ match }) => {
   const keyword = match.params.keyword;
@@ -21,31 +22,38 @@ const HomePage = ({ match }) => {
   }, [dispatch, keyword, pageNumber]);
 
   return (
-    <div className="my-4">
-      {!keyword && <ProductCarousel />}
-      <h3 className="my-3">Latest Products</h3>
-      {loading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant="danger">{error}</Message>
-      ) : (
-        <>
-          <Row>
-            {products &&
-              products.map((product) => (
-                <Col sm={12} md={6} lg={4} xl={3} key={product._id}>
-                  <ProductCard product={product} />
-                </Col>
-              ))}
-          </Row>
-          <Paginate
-            pages={pages}
-            page={page}
-            keyword={keyword ? keyword : ""}
-          />
-        </>
-      )}
-    </div>
+    <>
+      <Meta />
+      <div className="my-4">
+        {!keyword && <ProductCarousel />}
+        {!keyword ? (
+          <h3 className="my-3">Latest Products</h3>
+        ) : (
+          <h3>Search Results</h3>
+        )}
+        {loading ? (
+          <Loader />
+        ) : error ? (
+          <Message variant="danger">{error}</Message>
+        ) : (
+          <>
+            <Row>
+              {products &&
+                products.map((product) => (
+                  <Col sm={12} md={6} lg={4} xl={3} key={product._id}>
+                    <ProductCard product={product} />
+                  </Col>
+                ))}
+            </Row>
+            <Paginate
+              pages={pages}
+              page={page}
+              keyword={keyword ? keyword : ""}
+            />
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
