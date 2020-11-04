@@ -25,6 +25,15 @@ const getProducts = asyncHandler(async (req, res) => {
   res.json({ products, pages: Math.ceil(count / pageSize), page });
 });
 
+// @desc    get top rated products
+// @access  Public
+// @route   GET /api/products/top
+const getTopRatedProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+
+  res.json(products);
+});
+
 // @desc    get product by id
 // @access  Public
 // @route   GET /api/products/:id
@@ -155,4 +164,5 @@ export {
   createProduct,
   updateProduct,
   addProductReview,
+  getTopRatedProducts,
 };
